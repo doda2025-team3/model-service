@@ -1,0 +1,20 @@
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag'
+        required: true
+        type: string
+
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-slim
+    steps:
+      - run: echo Hello World!
