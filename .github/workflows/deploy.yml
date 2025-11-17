@@ -53,4 +53,4 @@ jobs:
         with:
           tag_name: ${{ github.event.inputs.tag }}
           token: ${{ secrets.GITHUB_TOKEN }}
-          files: output/
+          files: output/**
