@@ -12,9 +12,41 @@ on:
     tags:
       - v*
 
+permissions:
+  contents: write
+
 jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-slim
     steps:
-      - run: echo Hello World!
+      - name: Checkout code
+        uses: actions/checkout@v5
+
+      - name: Install Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+
+      - name: Read data
+        run: python src/read_data.py
+      - name: Preprocess text
+        run: python src/text_preprocessing.py
+      - name: Classify text
+        run: python src/text_classification.py
+
+      - name: Release with tag
+        if: ${{ github.event_name == 'push' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: output/
+
+      - name: Release with variable
+        if: ${{ github.event_name == 'workflow_dispatch' }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          files: output/
