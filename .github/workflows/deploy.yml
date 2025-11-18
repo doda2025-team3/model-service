@@ -25,23 +25,21 @@ jobs:
     steps:
       - name: Checkout code
         run: gh repo clone ${{ github.server_url }}/${{ github.repository }} -- --branch ${{ github.ref_name }} --depth 1
-      - run: ls -R
-      - name: Move into project directory
-        run: cd model-service
       - name: Install dependencies
+        working-directory: ./model-service
         run: pip install -r requirements.txt
 
-      - name: Create output directory
-        run: mkdir output
-      - name: Read data
-        run: python src/read_data.py
-      - name: Preprocess text
-        run: python src/text_preprocessing.py
-      - name: Classify text
-        run: python src/text_classification.py
+      - name: Build model
+        working-directory: ./model-service
+        run: |
+          mkdir output
+          python src/read_data.py
+          python src/text_preprocessing.py
+          python src/text_classification.py
 
       - name: Release with tag
+        working-directory: ./model-service
         run: gh release create ${{ github.ref_name }} ./output/**
-
       - name: Release with variable
+        working-directory: ./model-service
         run: gh release create ${{ github.event.inputs.tag }} ./output/**
