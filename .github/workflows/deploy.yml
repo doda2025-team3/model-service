@@ -33,9 +33,9 @@ jobs:
         working-directory: ./model-service
         run: |
           mkdir output
-          python src/read_data.py
-          python src/text_preprocessing.py
-          python src/text_classification.py
+          python3 src/read_data.py
+          python3 src/text_preprocessing.py
+          python3 src/text_classification.py
 
       - name: Release with tag
         working-directory: ./model-service
