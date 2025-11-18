@@ -26,7 +26,7 @@ jobs:
       - name: Checkout code
         run: gh repo clone ${{ github.server_url }}/${{ github.repository }} -- --branch ${{ github.ref_name }} --depth 1
       - name: Move into project directory
-        run: cd model-service
+        run: cd model-service/model-service
       - run: ls
 #      - name: Install Python
 #        uses: actions/setup-python@v6
