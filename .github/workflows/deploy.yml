@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - name: Checkout code
-        run: gh repo clone ${{ github.server.url }}/${{ github.repository }}  -b ${{ github.ref }} --single-branch
+        run: gh repo clone ${{ github.server_url }}/${{ github.repository }} -- -b ${{ github.ref }} --single-branch
 
 #      - name: Install Python
 #        uses: actions/setup-python@v6
