@@ -19,8 +19,8 @@ env:
   GH_TOKEN: ${{ github.token }}
 
 jobs:
-  deploy:
-    name: Deploy
+  release-model:
+    name: Release Model
     runs-on: ubuntu-slim
     steps:
       - name: Checkout code
@@ -40,8 +40,8 @@ jobs:
       - name: Release with tag
         if: ${{ github.event_name == 'push' }}
         working-directory: ./model-service
-        run: gh release create ${{ github.ref_name }} ./output/**
+        run: gh release create Model_${{ github.ref_name }} ./output/**
       - name: Release with variable
         if: ${{ github.event_name == 'workflow_dispatch' }}
         working-directory: ./model-service
-        run: gh release create ${{ github.event.inputs.tag }} ./output/**
+        run: gh release create Model_${{ github.event.inputs.tag }} ./output/**
