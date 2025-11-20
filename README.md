@@ -67,6 +67,6 @@ A GitHub workflow exists to train a model and create a GitHub release with the m
 There are two ways to trigger the workflow:
 
 * Tag a commit on the main branch with a version, E.G. `v1.1.0`. This will create a release titled the same as the tag.
-* Manually go to the Actions tab in the UI and trigger the `.github/workflows/release.yml` workflow. It requires a tag as input, which will be used as the release title.
+* Manually go to the Actions tab in the UI and trigger the `.github/workflows/release-model.yml` workflow. It requires a tag as input, which will be used as the release title.
 
 

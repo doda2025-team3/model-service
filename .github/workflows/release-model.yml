@@ -40,8 +40,8 @@ jobs:
       - name: Release with tag
         if: ${{ github.event_name == 'push' }}
         working-directory: ./model-service
-        run: gh release create Model_${{ github.ref_name }} ./output/**
+        run: gh release create Model_${{ github.ref_name }} ./output/** --target ${{ github.ref_name }}
       - name: Release with variable
         if: ${{ github.event_name == 'workflow_dispatch' }}
         working-directory: ./model-service
-        run: gh release create Model_${{ github.event.inputs.tag }} ./output/**
+        run: gh release create Model_${{ github.event.inputs.tag }} ./output/** --target ${{ github.ref_name }}
