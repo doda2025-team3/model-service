@@ -1,6 +1,8 @@
 """
 Flask API of the SMS Spam detection model model.
 """
+import os
+import requests
 import joblib
 from flask import Flask, jsonify, request
 from flasgger import Swagger
@@ -10,6 +12,27 @@ from text_preprocessing import prepare, _extract_message_len, _text_process
 
 app = Flask(__name__)
 swagger = Swagger(app)
+
+MODEL_PATH = os.getenv('MODEL_PATH', '/models/model.joblib')
+MODEL_URL = os.getenv('MODEL_URL')
+
+
+def ensure_model_exists():
+    """Ensure model exists, else download if missing"""
+    if not os.path.exists(MODEL_PATH):
+        if MODEL_URL:
+            print(f"Downloading model from {MODEL_URL}")
+            os.makedirs(os.path.dirname(MODEL_PATH), exist_ok=True)
+            response = requests.get(MODEL_URL)
+            with open(MODEL_PATH, 'wb') as f:
+                f.write(response.content)
+            print("Model downloaded successfully")
+        else:
+            raise FileNotFoundError(
+                f"Model not found at {MODEL_PATH} and no MODEL_URL provided. Please check.")
+
+# Check for model on startup
+ensure_model_exists()
 
 @app.route('/predict', methods=['POST'])
 def predict():

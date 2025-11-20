@@ -3,3 +3,8 @@ services:
     build: .
     ports:
       - "8081:8081"
+    environment:
+      - MODEL_PATH=/models/model.joblib
+      - MODEL_URL=${MODEL_URL}
+    volumes:
+      - ./models:/models
