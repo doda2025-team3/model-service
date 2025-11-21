@@ -1,3 +1,5 @@
+name: Release Model
+
 on:
   workflow_dispatch:
     inputs:
@@ -38,7 +40,10 @@ jobs:
       - name: Release with tag
         if: ${{ github.event_name == 'push' }}
         working-directory: ./model-service
-        run: gh release create Model_${{ github.ref_name }} ./output/** --target ${{ github.ref_name }}
+        run: |
+          BRANCH=$(git branch -r --contains ${{ github.ref }} --format "%(refname:short)")
+          gh release create Model_${{ github.ref_name }} ./output/** --target $BRANCH
+
       - name: Release with variable
         if: ${{ github.event_name == 'workflow_dispatch' }}
         working-directory: ./model-service
