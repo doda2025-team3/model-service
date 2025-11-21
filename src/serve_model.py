@@ -31,8 +31,6 @@ def ensure_model_exists():
             raise FileNotFoundError(
                 f"Model not found at {MODEL_PATH} and no MODEL_URL provided. Please check.")
 
-# Check for model on startup
-ensure_model_exists()
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -60,7 +58,7 @@ def predict():
     input_data = request.get_json()
     sms = input_data.get('sms')
     processed_sms = prepare(sms)
-    model = joblib.load('output/model.joblib')
+    model = joblib.load(MODEL_PATH)
     prediction = model.predict(processed_sms)[0]
     
     res = {
@@ -72,5 +70,7 @@ def predict():
     return jsonify(res)
 
 if __name__ == '__main__':
+    # Check for model on startup
+    ensure_model_exists()
     #clf = joblib.load('output/model.joblib')
     app.run(host="0.0.0.0", port=8081, debug=True)
