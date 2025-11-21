@@ -60,6 +60,10 @@ Once its startup has finished, you can either access [localhost:8081/apidocs](ht
       "sms": "test ..."
     }
 
+Download the model from the GitHub Releases page. Or you can use a remote model:
+    
+    $env:MODEL_URL="https://github.com/<username>/<repo>/releases/download/v1.0/model.joblib"
+    docker compose up --build
 
 ## Releasing the model
 
