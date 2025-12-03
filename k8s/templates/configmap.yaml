@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: model-service-config
+data:
+  extra.conf: |
+{{ .Values.config.extraConfig | indent 4 }}

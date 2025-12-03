@@ -1,0 +1,31 @@
+image:
+  repository: ./model-service
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  port: 8081
+
+env:
+  MODEL_PATH: "/models/model.joblib"
+  MODEL_URL: ""  
+
+volume:
+  hostPathEnabled: false
+  hostPath: "/mnt/shared/models"  
+  mountPath: "/models"
+
+ingress:
+  enabled: false
+  className: nginx
+  host: "model.local"
+  path: "/"
+
+config:
+  extraConfig: |
+    # Add optional config here
+
+secret:
+  enabled: false
+  username: "admin"
+  password: "admin123"

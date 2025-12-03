@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: model-service
+  labels:
+    app: model-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: model-service
+  template:
+    metadata:
+      labels:
+        app: model-service
+    spec:
+      containers:
+        - name: model-service
+          image: model-service:latest
+          ports:
+            - containerPort: 8081
+          env:
+            - name: MODEL_PATH
+              value: "/models/model.joblib"
+            - name: MODEL_URL
+              value: "http://localhost:8081" # or use a Helm template variable
+          volumeMounts:
+            - name: model-volume
+              mountPath: /models
+      volumes:
+        - name: model-volume
+          hostPath:
+            path: ./models
