@@ -1,10 +1,25 @@
 #!/bin/bash
-
 set -e
 
-if [ ! -f "output/preprocessor.joblib" ]; then
-    echo "Preprocessor not found - generating..."
+OUTPUT_DIR="/app/output"
+MODEL_DIR="/models"
+
+PREPROCESSOR_FILE="${MODEL_DIR}/preprocessor.joblib"
+MODEL_FILE="${MODEL_DIR}/model.joblib"
+PREPROCESSOR_PATH="${OUTPUT_DIR}/preprocessor.joblib"
+MODEL_PATH="${OUTPUT_DIR}/model.joblib"
+
+if [ ! -f "${PREPROCESSOR_FILE}" ] || [ ! -f "${MODEL_FILE}" ]; then
+    mkdir -p "${OUTPUT_DIR}"
+
     python src/text_preprocessing.py
+    python src/text_classification.py
+
+    mkdir -p "${MODEL_DIR}"
+
+    mv "${PREPROCESSOR_PATH}" "${MODEL_DIR}/"
+    mv "${MODEL_PATH}" "${MODEL_DIR}/"
+
 fi
 
 echo "Starting model service..."
