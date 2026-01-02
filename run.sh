@@ -1,8 +1,8 @@
 #!/bin/bash
 set -e
 
-OUTPUT_DIR="/app/output"
-MODEL_DIR="/models"
+OUTPUT_DIR="${OUTPUT_DIR:-/app/output}"
+MODEL_DIR="${MODEL_DIR:-/models}"
 
 PREPROCESSOR_FILE="${MODEL_DIR}/preprocessor.joblib"
 MODEL_FILE="${MODEL_DIR}/model.joblib"
