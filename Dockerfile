@@ -1,7 +1,7 @@
 FROM python:3.12.9-slim
 WORKDIR /app
 
-# Install the dependencies
+# Install the dependencies and avoiding to include apt cache in image (F5)
 RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     && rm -rf /var/lib/apt/lists/*
