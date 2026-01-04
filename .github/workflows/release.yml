@@ -8,7 +8,7 @@ on:
       - main
       - assignment1_excellent_attempt
     paths:
-     - "VERSION"
+     - "VERSION_CONTROL"
   workflow_dispatch:
 
 permissions:
