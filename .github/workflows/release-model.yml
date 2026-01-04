@@ -1,4 +1,8 @@
 on:
+  push:
+    branches: [ main ]
+    paths: 
+      - "VERSION"
   workflow_dispatch:
     inputs:
       tag:
@@ -6,9 +10,9 @@ on:
         required: true
         type: string
 
-  push:
-    tags:
-      - 'v[0-9]+.[0-9]+.[0-9]+'
+  # push:
+  #   tags:
+  #     - 'v[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
   contents: write
@@ -19,27 +23,53 @@ env:
 jobs:
   release-model:
     name: Release Model
-    runs-on: ubuntu-slim
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout code
-        run: gh repo clone ${{ github.server_url }}/${{ github.repository }} -- --branch ${{ github.ref_name }} --depth 1
+        uses: actions/checkout@v4
+        # run: gh repo clone ${{ github.server_url }}/${{ github.repository }} -- --branch ${{ github.ref_name }} --depth 1
+      
+      - name: Set up python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
       - name: Install dependencies
-        working-directory: ./model-service
-        run: pip install -r requirements.txt
+        run: |
+          pip install -r requirements.txt
 
       - name: Build model
-        working-directory: ./model-service
         run: |
-          mkdir output
+          set -e
+          mkdir -p output
           python3 src/read_data.py
           python3 src/text_preprocessing.py
           python3 src/text_classification.py
 
-      - name: Release with tag
-        if: ${{ github.event_name == 'push' }}
-        working-directory: ./model-service
-        run: gh release create Model_${{ github.ref_name }} ./output/** --target ${{ github.ref_name }}
-      - name: Release with variable
-        if: ${{ github.event_name == 'workflow_dispatch' }}
-        working-directory: ./model-service
-        run: gh release create Model_${{ github.event.inputs.tag }} ./output/** --target ${{ github.ref_name }}
+      - name: Read from VERSION file
+        run: |
+          VERSION=$(cat VERSION | tr -d ' \n\r')
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Create GitHub release and upload model assets
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN_CAROLYN }}
+        run: |
+          set -e  
+
+          TAG="model-${VERSION}"
+
+          gh release create "$TAG" \
+            --title "Model Release $TAG" \
+            --notes "Automated model release (commit ${GITHUB_SHA})" \
+            --target "${GITHUB_SHA}" \
+            || echo "Release $TAG already exists!"
+
+          gh release upload "$TAG" output/*.joblib --clobber
+
+      # - name: Release with tag
+      #   if: ${{ github.event_name == 'push' }}
+      #   run: gh release create Model_${{ github.ref_name }} ./output/** --target ${{ github.ref_name }}
+      # - name: Release with variable
+      #   if: ${{ github.event_name == 'workflow_dispatch' }}
+      #   run: gh release create Model_${{ github.event.inputs.tag }} ./output/** --target ${{ github.ref_name }}

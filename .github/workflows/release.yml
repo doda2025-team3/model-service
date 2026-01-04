@@ -1,9 +1,18 @@
 name: Release
 
 
+# on:
+#   push:
+#     tags: ["v[0-9]+.[0-9]+.[0-9]+"]
 on:
   push:
     tags: ["v[0-9]+.[0-9]+.[0-9]+"]
+    branches:
+      - main
+      - assignment1_excellent_attempt
+    paths:
+     - "VERSION_CONTROL"
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -24,9 +33,9 @@ jobs:
         username: ${{ github.actor }}
         password: ${{ secrets.GH_TOKEN_CAROLYN }}
 
-    - name: Parse version info from tag
+    - name: Read version from VERSION
       run: |
-        VERSION=${GITHUB_REF:11}
+        VERSION=$(cat VERSION | tr -d ' \n\r')
         MAJOR=$(echo "$VERSION" | cut -d . -f 1)
         MINOR=$(echo "$VERSION" | cut -d . -f 2)
         PATCH=$(echo "$VERSION" | cut -d . -f 3)
@@ -34,6 +43,18 @@ jobs:
         echo "version_major=$MAJOR" >> $GITHUB_ENV
         echo "version_minor=$MINOR" >> $GITHUB_ENV
         echo "version_patch=$PATCH" >> $GITHUB_ENV
+
+    # - name: Parse version info from tag
+    #   run: |
+    #     VERSION=${GITHUB_REF:11}
+    #     MAJOR=$(echo "$VERSION" | cut -d . -f 1)
+    #     MINOR=$(echo "$VERSION" | cut -d . -f 2)
+    #     PATCH=$(echo "$VERSION" | cut -d . -f 3)
+    #     echo "version=$VERSION" >> $GITHUB_ENV
+    #     echo "version_major=$MAJOR" >> $GITHUB_ENV
+    #     echo "version_minor=$MINOR" >> $GITHUB_ENV
+    #     echo "version_patch=$PATCH" >> $GITHUB_ENV
+
 
     - name: Set up QEMU
       uses: docker/setup-qemu-action@v3
