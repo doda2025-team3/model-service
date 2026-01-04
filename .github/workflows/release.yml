@@ -35,7 +35,7 @@ jobs:
 
     - name: Read version from VERSION
       run: |
-        VERSION=$(cat VERSION | tr -d ' \n\r')
+        VERSION=$(cat VERSION_CONTROL | tr -d ' \n\r')
         MAJOR=$(echo "$VERSION" | cut -d . -f 1)
         MINOR=$(echo "$VERSION" | cut -d . -f 2)
         PATCH=$(echo "$VERSION" | cut -d . -f 3)
