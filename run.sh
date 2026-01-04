@@ -20,6 +20,8 @@ if [ ! -f "${PREPROCESSOR_PATH}" ] || [ ! -f "${MODEL_FILE}" ]; then
     mv "${PREPROCESSOR_PATH}" "${MODEL_DIR}/"
     mv "${MODEL_PATH}" "${MODEL_DIR}/"
 
+    cp "${MODEL_DIR}/preprocessor.joblib" "${OUTPUT_DIR}/preprocessor.joblib"
+
 fi
 
 echo "Starting model service..."
