@@ -9,7 +9,7 @@ MODEL_FILE="${MODEL_DIR}/model.joblib"
 PREPROCESSOR_PATH="${OUTPUT_DIR}/preprocessor.joblib"
 MODEL_PATH="${OUTPUT_DIR}/model.joblib"
 
-if [ ! -f "${PREPROCESSOR_FILE}" ] || [ ! -f "${MODEL_FILE}" ]; then
+if [ ! -f "${PREPROCESSOR_PATH}" ] || [ ! -f "${MODEL_FILE}" ]; then
     mkdir -p "${OUTPUT_DIR}"
 
     python src/text_preprocessing.py
